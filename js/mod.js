@@ -1,25 +1,28 @@
 let modInfo = {
-	name: "The Modding Tree",
-	id: "mymod",
-	author: "",
-	pointsName: "points",
-	discordName: "",
-	discordLink: "",
-	initialStartPoints: new ExpantaNum (10), // Used for hard resets and new players
-	
-	offlineLimit: 1,  // In hours
+	name: "Difficulty Ascension",
+	id: "ejtslop",
+	author: "prokingnoob2513, tested by ...",
+	pointsName: "Skill",
+	discordName: "Inside Jokes Studios",
+	discordLink: "https://discord.gg/eAzQPyXTPc",
+	initialStartPoints: new ExpantaNum(0), // Used for hard resets and new players
+
+	offlineLimit: 0,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "",
+	num: "3",
+	name: "Release",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+let changelog = `
+	x.0: New class<br>
+	0.x: Changes<br>
+	<h1>Changelog:</h1><br>
+	<h3>v3</h3><br>
+	- roblox sucks ngl
+`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -33,31 +36,57 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return hasUpgrade("cn", 11)
 }
 
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
-		return new ExpantaNum(0)
+		return ExpantaNum(0)
 
-	let gain = new ExpantaNum(1)
+	let gain = player.baseSkillGain
+
+	if (hasUpgrade("cn", 21)) {gain = gain.mul(2)}
+	if (hasUpgrade("cn", 31)) {gain = gain.mul(1.5)}
+	if (hasUpgrade("cn", 32)) {gain = gain.mul(1.75)}
+	if (hasUpgrade("cn", 33)) {gain = gain.mul(2.5)}
+	if (hasUpgrade("cn", 34)) {gain = gain.mul(upgradeEffect("cn", 34))}
+	if (hasUpgrade("cn", 41)) {gain = gain.mul(3)}
+	if (hasUpgrade("cn", 44)) {gain = gain.mul(1.25)}
+	if (hasUpgrade("cn", 51)) {gain = gain.mul(upgradeEffect("cn", 51))}
+	if (hasUpgrade("cn", 65)) {gain = gain.mul(4)}
+
+	if (hasUpgrade("c0", 14)) {gain = gain.mul(1.8)}
+	if (hasUpgrade("c0", 51)) {gain = gain.div(4.5)}
+	if (hasUpgrade("c0", 53)) {gain = gain.mul(3)}
+	if (hasUpgrade("c0", 61)) {gain = gain.mul(2)}
+
+	gain = gain.mul(tmp.c0.effect)
+	gain = gain.mul(tmp.c1.effect)
+	
 	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
-function addedPlayerData() { return {
+function addedPlayerData() {return {
+	baseSkillGain: ExpantaNum(0)
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
+	'Offline progression disabled (for now)'
 ]
+
+var backgroundStyle = function(){
+	return {
+		"background-image": "linear-gradient(rgb(0,100,100), rgb(0,170,0))"
+	}
+}
 
 // Determines when the game "ends"
 function isEndgame() {
 	return false
 }
-
 
 
 // Less important things beyond this point!
