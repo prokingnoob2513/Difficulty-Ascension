@@ -65,8 +65,10 @@ function format(decimal, precision = 2, small=false) {
         }
         fmt=powers.join("e")
         return fmt + dc
-    } else if (decimal.lt(1000) && decimal.gt(0.001)) {
+    } else if (decimal.lt(1000)) {
         return fmt + dc
+    }
+    /*
     } else if (decimal.lte(0.001)&&small&&decimal.gt(0)) {
         decimal = decimal.pow(-1)
         let val = ""
@@ -76,17 +78,17 @@ function format(decimal, precision = 2, small=false) {
         } else {
             return format(decimal, precision) + "⁻¹"
         }
-    }
+    }*/
     if(fmt.split(".").length>1&&precision==0){
         fmt=fmt.split(".")[0]
     }
-  if(fmt.split(".").length>1&&precision>0){
-    if(fmt.split(".")[1].length>precision){
-      let f=fmt.split(".")
-      fmt=f[0]+"."+f[1].substring(0,precision)
+    if(fmt.split(".").length>1&&precision>0){
+        if(fmt.split(".")[1].length>precision){
+        let f=fmt.split(".")
+        fmt=f[0]+"."+f[1].substring(0,precision)
+        }
     }
-  }
-  return fmt
+    return fmt
 }
 
 function formatWhole(decimal) {
