@@ -1,27 +1,40 @@
 let modInfo = {
 	name: "Difficulty Ascension",
 	id: "ejtslop",
-	author: "prokingnoob2513, tested by ...",
+	author: "prokingnoob2513",
 	pointsName: "Skill",
 	discordName: "Inside Jokes Studios",
 	discordLink: "https://discord.gg/eAzQPyXTPc",
 	initialStartPoints: new ExpantaNum(0), // Used for hard resets and new players
 
 	offlineLimit: 0,  // In hours
+	allowSmall: true
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "3",
-	name: "Release",
+	num: "2.5",
+	name: "Pre-Release",
 }
 
 let changelog = `
-	x.0: New class<br>
-	0.x: Changes<br>
-	<h1>Changelog:</h1><br>
-	<h3>v3</h3><br>
-	- roblox sucks ngl
+	x.y: New class<br>
+	0/x: Changes<br>
+	<h1>Changelog</h1><br>
+	<h3>v2.5: Pre-Release</h3><br>
+	- Scroll down ;)
+
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+	[prokingnoob2513]: Former Proking's Upgrade Tree developer here. Roblox made it so that I can't even develop games on roblox anymore... you know,
+	that incremental game is designed to reach ExpantaNum limit. It started with only me working on PrUT, but as the community grew, it expanded into
+	a medium-sized dev team. Roblox updates are slowly getting worse, to the point where you need to complete evaluation process to make games public.
+	I can't just keep up with this anymore. I had to discontinue PrUT from now on. (more soon)<br>
 `
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
@@ -41,8 +54,7 @@ function canGenPoints(){
 
 // Calculate points/sec!
 function getPointGen() {
-	if(!canGenPoints())
-		return ExpantaNum(0)
+	if(!canGenPoints()) return ExpantaNum(0)
 
 	let gain = player.baseSkillGain
 
@@ -60,28 +72,36 @@ function getPointGen() {
 	if (hasUpgrade("c0", 51)) {gain = gain.div(4.5)}
 	if (hasUpgrade("c0", 53)) {gain = gain.mul(3)}
 	if (hasUpgrade("c0", 61)) {gain = gain.mul(2)}
+	
+	if (hasUpgrade("c1", 21)) {gain = gain.mul(3)}
+	if (hasUpgrade("c1", 43)) {gain = gain.mul(2.34)}
+	if (hasUpgrade("c1", 62)) {gain = gain.mul(3)}
+	
+	if (hasUpgrade("c2", 12)) {gain = gain.mul(1.5)}
 
 	gain = gain.mul(tmp.c0.effect)
 	gain = gain.mul(tmp.c1.effect)
+	gain = gain.mul(tmp.sl.effect[0])
+
+	gain = gain.mul(buyableEffect("tw", 11))
 	
 	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() {return {
-	baseSkillGain: ExpantaNum(0)
+	baseSkillGain: ExpantaNum(0),
+
+	// options stuff
+	opt_preview_ordinals: false,
+	opt_hide_bought_upg: false,
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
-	'Offline progression disabled (for now)'
+	'Offline progression disabled',
+	'This is a pre-release, so join <a href="https://discord.gg/eAzQPyXTPc">the server</a> for feedback/criticism, and bugs.'
 ]
-
-var backgroundStyle = function(){
-	return {
-		"background-image": "linear-gradient(rgb(0,100,100), rgb(0,170,0))"
-	}
-}
 
 // Determines when the game "ends"
 function isEndgame() {
