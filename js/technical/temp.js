@@ -43,8 +43,8 @@ function setupTemp() {
 	}
 
 	tmp.other = {
-		lastPoints: player.points || ExpantaNumZero,
-		oomps: ExpantaNumZero,
+		lastPoints: player.points || MegotaNumZero,
+		oomps: MegotaNumZero,
 		screenWidth: 0,
 		screenHeight: 0,
     }
@@ -59,7 +59,7 @@ function setupTempData(layerData, tmpData, funcsData) {
 		if (layerData[item] == null) {
 			tmpData[item] = null
 		}
-		else if (layerData[item] instanceof ExpantaNum)
+		else if (layerData[item] instanceof MegotaNum)
 			tmpData[item] = layerData[item]
 		else if (Array.isArray(layerData[item])) {
 			tmpData[item] = []
@@ -77,7 +77,7 @@ function setupTempData(layerData, tmpData, funcsData) {
 		}
 		else if (isFunction(layerData[item]) && !activeFunctions.includes(item)){
 			funcsData[item] = layerData[item]
-			tmpData[item] = ExpantaNumOne // The safest thing to put probably?
+			tmpData[item] = MegotaNumOne // The safest thing to put probably?
 		} else {
 			tmpData[item] = layerData[item]
 		}
@@ -121,10 +121,10 @@ function updateTempData(layerData, tmpData, funcsData) {
 		}
 		else if (isFunction(layerData[item]) && !isFunction(tmpData[item])){
 			let value = layerData[item]()
-			if (value !== value || value === ExpantaNumNaN){
+			if (value !== value || value === MegotaNumNaN){
 				if (NaNalert === true || confirm ("Invalid value found in tmp, named '" + item + "'. Please let the creator of this mod know! Would you like to try to auto-fix the save and keep going?")){
 					NaNalert = true
-					value = (value !== value ? 0 : ExpantaNumZero)
+					value = (value !== value ? 0 : MegotaNumZero)
 				}
 				else {
 					clearInterval(interval);

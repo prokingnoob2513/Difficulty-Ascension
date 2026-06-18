@@ -69,9 +69,9 @@ function getStartLayerData(layer) {
 	if (layerdata.unlocked === undefined)
 		layerdata.unlocked = true;
 	if (layerdata.total === undefined)
-		layerdata.total = new ExpantaNum(0);
+		layerdata.total = new MegotaNum(0);
 	if (layerdata.best === undefined)
-		layerdata.best = new ExpantaNum(0);
+		layerdata.best = new MegotaNum(0);
 	if (layerdata.resetTime === undefined)
 		layerdata.resetTime = 0;
         if (layerdata.forceTooltip === undefined)
@@ -81,7 +81,7 @@ function getStartLayerData(layer) {
         if (layerdata.noRespecConfirm === undefined) layerdata.noRespecConfirm = false
 	if (layerdata.clickables == undefined)
 		layerdata.clickables = getStartClickables(layer);
-	layerdata.spentOnBuyables = new ExpantaNum(0);
+	layerdata.spentOnBuyables = new MegotaNum(0);
 	layerdata.upgrades = [];
 	layerdata.milestones = [];
 	layerdata.lastMilestone = null;
@@ -96,7 +96,7 @@ function getStartBuyables(layer) {
 	if (layers[layer].buyables) {
 		for (id in layers[layer].buyables)
 			if (isPlainObject(layers[layer].buyables[id]))
-				data[id] = new ExpantaNum(0);
+				data[id] = new MegotaNum(0);
 	}
 	return data;
 }
@@ -124,9 +124,9 @@ function fixSave() {
 
 	for (layer in layers) {
 		if (player[layer].best !== undefined)
-			player[layer].best = new ExpantaNum(player[layer].best);
+			player[layer].best = new MegotaNum(player[layer].best);
 		if (player[layer].total !== undefined)
-			player[layer].total = new ExpantaNum(player[layer].total);
+			player[layer].total = new MegotaNum(player[layer].total);
 
 		if (layers[layer].tabFormat && !Array.isArray(layers[layer].tabFormat)) {
 
@@ -166,12 +166,12 @@ function fixData(defaultData, newData) {
 			else
 				fixData(defaultData[item], newData[item]);
 		}
-		else if (defaultData[item] instanceof ExpantaNum) { // Convert to ExpantaNum
+		else if (defaultData[item] instanceof MegotaNum) { // Convert to MegotaNum
 			if (newData[item] === undefined)
 				newData[item] = defaultData[item];
 
 			else{
-                let newItemThing=new ExpantaNum(0)
+                let newItemThing=new MegotaNum(0)
 				newItemThing.array = newData[item].array
 				newItemThing.sign = newData[item].sign
 				newItemThing.layer = newData[item].layer
@@ -196,6 +196,7 @@ function load() {
 	if (get === null || get === undefined)
 		player = getStartPlayer();
 	else
+		console.log(JSON.parse(atob(get)))
 		player = Object.assign(getStartPlayer(), JSON.parse(atob(get)));
 	fixSave();
 
@@ -243,15 +244,41 @@ function NaNcheck(data) {
 				NaNalert = true;
 			}
 		}
-		else if (data[item] instanceof ExpantaNum) { // Convert to ExpantaNum
+		else if (data[item] instanceof MegotaNum) { // Convert to MegotaNum
 		}
 		else if ((!!data[item]) && (data[item].constructor === Object)) {
 			NaNcheck(data[item]);
 		}
 	}
 }
+/*
+function encode_(str) {
+	let a = str.split('').reduce((acc, char) => {
+		return (acc << 8n) + BigInt(char.charCodeAt(0));
+	}, 0n);
+	const result = [];
+	if (a === 0n) return [0];
+	while (a > 0n) {
+		result.unshift(Number(a % 1024n));
+		a = a / 1024n;
+	}
+	return String.fromCharCode(...result)
+}
+function decode_(str) {
+	let a = str.split('').reduce((acc, char) => {
+		return (acc << 10n) + BigInt(char.charCodeAt(0));
+	}, 0n);
+    const result = [];
+    if (a === 0n) return [0];
+    while (a > 0n) {
+        result.unshift(Number(a % 256n));
+        a = a / 256n;
+    }
+    return String.fromCharCode(...result);
+}*/
+
 function exportSave() {
-	let str = btoa(JSON.stringify(player));
+	let str = btoa(JSON.stringify(player))
 
 	const el = document.createElement("textarea");
 	el.value = str;
@@ -278,6 +305,8 @@ function importSave(imported = undefined, forced = false) {
 		return;
 	}
 }
+
+
 function versionCheck() {
 	let setVersion = true;
 
