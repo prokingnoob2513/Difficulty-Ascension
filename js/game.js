@@ -22,23 +22,23 @@ function getResetGain(layer, useType = null) {
 			return layers[layer].getResetGain()
 	} 
 	if(tmp[layer].type == "none")
-		return new MegotaNum (0)
-	if (tmp[layer].gainExp.eq(0)) return MegotaNumZero
+		return new ExpantaNum (0)
+	if (tmp[layer].gainExp.eq(0)) return ExpantaNumZero
 	if (type=="static") {
-		if ((!tmp[layer].canBuyMax) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return MegotaNumOne
-		let gain = tmp[layer].baseAmount.div(tmp[layer].requires).div(tmp[layer].gainMult).max(1).log(tmp[layer].base).times(tmp[layer].gainExp).pow(MegotaNum.pow(tmp[layer].exponent, -1))
+		if ((!tmp[layer].canBuyMax) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return ExpantaNumOne
+		let gain = tmp[layer].baseAmount.div(tmp[layer].requires).div(tmp[layer].gainMult).max(1).log(tmp[layer].base).times(tmp[layer].gainExp).pow(ExpantaNum.pow(tmp[layer].exponent, -1))
 		gain = gain.times(tmp[layer].directMult)
 		return gain.floor().sub(player[layer].points).add(1).max(1);
 	} else if (type=="normal"){
-		if (tmp[layer].baseAmount.lt(tmp[layer].requires)) return MegotaNumZero
+		if (tmp[layer].baseAmount.lt(tmp[layer].requires)) return ExpantaNumZero
 		let gain = tmp[layer].baseAmount.div(tmp[layer].requires).pow(tmp[layer].exponent).times(tmp[layer].gainMult).pow(tmp[layer].gainExp)
-		if (gain.gte(tmp[layer].softcap)) gain = gain.pow(tmp[layer].softcapPower).times(tmp[layer].softcap.pow(MegotaNumOne.sub(tmp[layer].softcapPower)))
+		if (gain.gte(tmp[layer].softcap)) gain = gain.pow(tmp[layer].softcapPower).times(tmp[layer].softcap.pow(ExpantaNumOne.sub(tmp[layer].softcapPower)))
 		gain = gain.times(tmp[layer].directMult)
 		return gain.floor().max(0);
 	} else if (type=="custom"){
 		return layers[layer].getResetGain()
 	} else {
-		return MegotaNumZero
+		return ExpantaNumZero
 	}
 }
 
@@ -51,35 +51,35 @@ function getNextAt(layer, canMax=false, useType = null) {
 
 		}
 	if(tmp[layer].type == "none")
-		return new MegotaNum (Infinity)
+		return new ExpantaNum (Infinity)
 
-	if (tmp[layer].gainMult.lte(0)) return new MegotaNum(Infinity)
-	if (tmp[layer].gainExp.lte(0)) return new MegotaNum(Infinity)
+	if (tmp[layer].gainMult.lte(0)) return new ExpantaNum(Infinity)
+	if (tmp[layer].gainExp.lte(0)) return new ExpantaNum(Infinity)
 
 	if (type=="static") 
 	{
 		if (!tmp[layer].canBuyMax) canMax = false
 		let amt = player[layer].points.plus((canMax&&tmp[layer].baseAmount.gte(tmp[layer].nextAt))?tmp[layer].resetGain:0).div(tmp[layer].directMult)
-		let extraCost = MegotaNum.pow(tmp[layer].base, amt.pow(tmp[layer].exponent).div(tmp[layer].gainExp)).times(tmp[layer].gainMult)
+		let extraCost = ExpantaNum.pow(tmp[layer].base, amt.pow(tmp[layer].exponent).div(tmp[layer].gainExp)).times(tmp[layer].gainMult)
 		let cost = extraCost.times(tmp[layer].requires).max(tmp[layer].requires)
 		if (tmp[layer].roundUpCost) cost = cost.ceil()
 		return cost;
 	} else if (type=="normal"){
 		let next = tmp[layer].resetGain.add(1).div(tmp[layer].directMult)
-		if (next.gte(tmp[layer].softcap)) next = next.div(tmp[layer].softcap.pow(MegotaNumOne.sub(tmp[layer].softcapPower))).pow(MegotaNumOne.div(tmp[layer].softcapPower))
+		if (next.gte(tmp[layer].softcap)) next = next.div(tmp[layer].softcap.pow(ExpantaNumOne.sub(tmp[layer].softcapPower))).pow(ExpantaNumOne.div(tmp[layer].softcapPower))
 		next = next.root(tmp[layer].gainExp).div(tmp[layer].gainMult).root(tmp[layer].exponent).times(tmp[layer].requires).max(tmp[layer].requires)
 		if (tmp[layer].roundUpCost) next = next.ceil()
 		return next;
 	} else if (type=="custom"){
 		return layers[layer].getNextAt(canMax)
 	} else {
-		return MegotaNumZero
+		return ExpantaNumZero
 	}}
 
 function softcap(value, cap, power = 0.5) {
 	if (value.lte(cap)) return value
 	else
-		return value.pow(power).times(cap.pow(MegotaNumOne.sub(power)))
+		return value.pow(power).times(cap.pow(ExpantaNumOne.sub(power)))
 }
 
 // Return true if the layer should be highlighted. By default checks for upgrades only.
@@ -172,12 +172,12 @@ function layerDataReset(layer, keep = []) {
 function resetBuyables(layer){
 	if (layers[layer].buyables) 
 		player[layer].buyables = getStartBuyables(layer)
-	player[layer].spentOnBuyables = MegotaNumZero
+	player[layer].spentOnBuyables = ExpantaNumZero
 }
 
 
 function addPoints(layer, gain) {
-	player[layer].points = player[layer].points.add(gain).max(0)
+	player[layer].points = player[layer].points.add(gain)
 	if (player[layer].best) player[layer].best = player[layer].best.max(player[layer].points)
 	if (player[layer].total) player[layer].total = player[layer].total.add(gain)
 }
@@ -220,7 +220,7 @@ function doReset(layer, force=false) {
 			}
 		}
 	
-		tmp[layer].baseAmount = MegotaNumZero // quick fix
+		tmp[layer].baseAmount = ExpantaNumZero // quick fix
 	}
 
 	if (tmp[layer].resetsNothing) return
@@ -231,7 +231,7 @@ function doReset(layer, force=false) {
 	}
 
 	prevOnReset = {...player} //Deep Copy
-	player.points = (row == 0 ? MegotaNumZero : getStartPoints())
+	player.points = (row == 0 ? ExpantaNumZero : getStartPoints())
 
 	for (let x = row; x >= 0; x--) rowReset(x, layer)
 	rowReset("side", layer)

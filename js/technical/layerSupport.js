@@ -1,11 +1,11 @@
 var layers = {}
-const EN = MegotaNum
-const MegotaNumZero = new MegotaNum(0)
-const MegotaNumOne = new MegotaNum(1)
-const MegotaNumNaN = new MegotaNum(NaN)
-const decimalZero = MegotaNumZero
-const decimalOne= MegotaNumOne
-const decimalNaN = MegotaNumNaN
+const EN = ExpantaNum
+const ExpantaNumZero = new ExpantaNum(0)
+const ExpantaNumOne = new ExpantaNum(1)
+const ExpantaNumNaN = new ExpantaNum(NaN)
+const decimalZero = ExpantaNumZero
+const decimalOne= ExpantaNumOne
+const decimalNaN = ExpantaNumNaN
 function layerShown(layer){
     return tmp[layer].layerShown;
 }
@@ -123,7 +123,7 @@ function setupLayer(layer){
                 if (layers[layer].buyables[thing].unlocked === undefined)
                     layers[layer].buyables[thing].unlocked = true
                 layers[layer].buyables[thing].canBuy = function() {return canBuyBuyable(this.layer, this.id)}
-                if (layers[layer].buyables[thing].purchaseLimit === undefined) layers[layer].buyables[thing].purchaseLimit = new MegotaNum(Infinity)
+                if (layers[layer].buyables[thing].purchaseLimit === undefined) layers[layer].buyables[thing].purchaseLimit = new ExpantaNum(Infinity)
         
             }  
     
@@ -179,13 +179,13 @@ function setupLayer(layer){
     if(!layers[layer].componentStyles) layers[layer].componentStyles = {}
     if(layers[layer].symbol === undefined) layers[layer].symbol = layer.charAt(0).toUpperCase() + layer.slice(1)
     if(layers[layer].unlockOrder === undefined) layers[layer].unlockOrder = []
-    if(layers[layer].gainMult === undefined) layers[layer].gainMult = MegotaNumOne
-    if(layers[layer].gainExp === undefined) layers[layer].gainExp = MegotaNumOne
-    if(layers[layer].directMult === undefined) layers[layer].directMult = MegotaNumOne
+    if(layers[layer].gainMult === undefined) layers[layer].gainMult = ExpantaNumOne
+    if(layers[layer].gainExp === undefined) layers[layer].gainExp = ExpantaNumOne
+    if(layers[layer].directMult === undefined) layers[layer].directMult = ExpantaNumOne
     if(layers[layer].type === undefined) layers[layer].type = "none"
     if(layers[layer].base === undefined || layers[layer].base <= 1) layers[layer].base = 2
-    if(layers[layer].softcap === undefined) layers[layer].softcap = new MegotaNum("e1e7")
-    if(layers[layer].softcapPower === undefined) layers[layer].softcapPower = new MegotaNum("0.5")
+    if(layers[layer].softcap === undefined) layers[layer].softcap = new ExpantaNum("e1e7")
+    if(layers[layer].softcapPower === undefined) layers[layer].softcapPower = new ExpantaNum("0.5")
     if(layers[layer].displayRow === undefined) layers[layer].displayRow = layers[layer].row
     if(layers[layer].name === undefined) layers[layer].name = layer
     if(layers[layer].layerShown === undefined) layers[layer].layerShown = true
