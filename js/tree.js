@@ -2187,8 +2187,8 @@ addLayer("sl", {
 	],
 
 	effect() {
-		let a = player.sl.points.mul(3).pow(0.08).max(1) // skill
-		let b = player.sl.points.mul(2.5).pow(0.05).max(1) // time
+		let a = player.sl.points.mul(5).pow(0.08).max(1) // skill
+		let b = player.sl.points.mul(3.5).pow(0.05).max(1) // time
 		let c = player.sl.points.mul(2).pow(0.02).max(1) // input
 		return [a,b,c]
 	},
