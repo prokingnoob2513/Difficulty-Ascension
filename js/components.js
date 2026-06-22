@@ -556,6 +556,16 @@ function loadVue() {
 		`
 	})
 
+	// Updates the value in player[data]
+	// added by prokingnoob2513
+	Vue.component('p_slider', {
+		props: ['layer', 'data'],
+		template: `
+			<div class="tooltipBox">
+			<tooltip :text="player[data[0]]"></tooltip><input type="range" v-model="player[data[0]]" :min="data[1]" :max="data[2]"></div>
+		`
+	})
+
 	// These are for buyables, data is the id of the corresponding buyable
 	Vue.component('sell-one', {
 		props: ['layer', 'data'],

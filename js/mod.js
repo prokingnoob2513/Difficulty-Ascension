@@ -13,19 +13,27 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "2.5/1",
-	name: "Pre-Release",
+	num: "2.5/2",
+	name: "Some rebalancing yuh",
 }
 
 let changelog = `
 	x.y: New class<br>
 	0/x: Changes<br>
 	<h1>Changelog</h1><br>
+	<h3>v2.5/2: Some rebalancing yuh</h3><br>
+	+= Arrow keys to platformer<br>
+	= Pleasant's boost: x3 Time gain -> x2 Input gain, and x3 Time gain<br>
+	= Calm's boost: +0.0002 base Skill gain -> +0.002 base Skill gain<br>
+	= Made upgrades a little bigger<br>
+	= Changed level generation<br>
+	= Medium - Tricky's costs are a bit inflated<br>
+	= A few small changes<br>
 	<h3>v2.5/1: Hotfix yeah</h3><br>
-	- Recolored some difficulties<br>
-	- thats it?<br>
+	= Recolored some difficulties<br>
+	= thats it?<br>
 	<h3>v2.5: Pre-Release</h3><br>
-	- Scroll down ;)
+	= Scroll down ;)
 
 	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -94,6 +102,7 @@ function getPointGen() {
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() {return {
 	baseSkillGain: ExpantaNum(0),
+	pl_disp_size: 20,
 
 	// options stuff
 	opt_preview_ordinals: false,
@@ -111,6 +120,8 @@ function isEndgame() {
 	return false
 }
 
+// Music yeah
+
 
 // Less important things beyond this point!
 
@@ -122,4 +133,7 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+	player.c1.keyboardCD = [0,0,0,0,0]
+	player.c2.switch = false
+	player.pl_disp_size = 20
 }

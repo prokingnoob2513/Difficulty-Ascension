@@ -143,11 +143,16 @@ function c1_key(i) {
 function pl_grid(rows, x = 0, y = 0, offx = 0, offy = 0){
 	return Number(`${(rows+1)-Math.floor(y+offy+1)}${x+offx+1 < 10 ?"0":""}${x+offx+1}`)
 }
-function pl_gen(coords, sizex, sizey) {
+function pl_gen(coords, sizex, sizey, amongus) {
 	let r = []
-	for (let x = 0; x < sizex; x++) {
-		for (let y = 0; y < sizey; y++) {
-			r.push(coords + x + y*100)
+	if (amongus) {
+		// among us pattern
+		return [coords+1, coords+2, coords+3, coords+100, coords+101, coords+200, coords+201, coords+202, coords+203, coords+301, coords+303]
+	} else {
+		for (let x = 0; x < sizex; x++) {
+			for (let y = 0; y < sizey; y++) {
+				r.push(coords + x + y*100)
+			}
 		}
 	}
 	return r
@@ -155,25 +160,22 @@ function pl_gen(coords, sizex, sizey) {
 function pl_regen() {
 	player.pl.blocks = []
 				
-	let mode = Math.random()
-	if (mode < 0.5) {
-		for (let i = 1; i <= 23; i++) {
+	// let mode = Math.random()
+	// only 1 mode
+	for (let i = 0; i <= 5; i++) {
+		for (let j = 0; j <= 5; j++) {
 			player.pl.blocks = [...player.pl.blocks, ...pl_gen(
-				(1+i) * 100 + randNum(1, 40),
-				randNum(4, 15), 1
+				(i*4+1) * 100 + (1+j*10+randNum(-5,5)),
+				randNum(1, 11), randNum(1, 4),
+				randNum(1, 47176870) == 69420 // 1 in 47176870 or BB(5) each piece for amongus
 			)]
-		}
-	} else if (mode > 0.5) {
-		for (let i = 0; i <= 5; i++) {
-			for (let j = 0; j <= 5; j++) {
-				player.pl.blocks = [...player.pl.blocks, ...pl_gen(
-					(i*4+1) * 100 + (1+j*10),
-					randNum(1, 9), randNum(1, 3)
-				)]
-			}
 		}
 	}
 
+	for (let i = 2401; i <= 2407; i++) {
+		const index = player.pl.blocks.indexOf(i)
+		if (index > -1) player.pl.blocks.splice(index,1)
+	}
 	player.pl.x = 0
 	player.pl.y = 0
 }
@@ -292,6 +294,9 @@ addLayer("cn", {
 				pow = hasUpgrade("cn", 61) ? 1.25 : 1
 				return player.points.add(10).ln().pow(pow)
 			},
+			effectDisplay(){
+				return "now what"
+			},
 			
 			canAfford(){return player.points.gte(0.0125)},
 			pay(){player.points = player.points.minus(0.0125)}
@@ -346,11 +351,11 @@ addLayer("cn", {
         },
 		51: {
 			fullDisplay(){
-				return displayUpgBig("-100", "Exist", "Big boost incoming! Each difficulty gives x1.125 Skill gain.", "Cost: 1 Skill", ["cn", 51])
+				return displayUpgBig("-100", "Exist", "Big boost incoming! Any difficulty bought gives x1.125 Skill gain.", "Cost: 1 Skill", ["cn", 51])
 			},
             style: {
-				"width": "150px",
-				"height": "150px",
+				"width": "175px",
+				"height": "175px",
 				...cssTemplate1("#ffffff", "#ff2727")
             },
 			unlocked() {return hasUpgrade("cn", 44)},
@@ -979,7 +984,7 @@ addLayer("c1", {
 				return displayUpgSmall("-13", "Press a Key", "x1.5 Time, and unlock a new hotkey (again)", "Cost: 5 Inputs, 1.75e10 Skill", ["c1", 23])
 			},
             style: {
-				...cssTemplate1("#ffffff", "#868686")
+				...cssTemplate1("#ffffff", "#c9c9c9")
             },
 			unlocked() {return hasUpgrade("c1", 22)},
 			
@@ -1194,7 +1199,7 @@ addLayer("c1", {
         },
 		61: {
 			fullDisplay(){
-				return displayUpgSmall("-6", "Pleasant", "x3 Time gain.", "Cost: 350 Inputs, 2.5e13 Skill", ["c1", 61])
+				return displayUpgSmall("-6", "Pleasant", "x2 Input gain, and x3 Time gain.", "Cost: 350 Inputs, 2.5e13 Skill", ["c1", 61])
 			},
             style: {
 				...cssTemplate1("#90E1FF", "#ffffff")
@@ -1373,7 +1378,9 @@ addLayer("c1", {
 			unlocked(){return hasUpgrade("c0", 71)},
 			
 			canClick(){return true},
-			onClick(){player.c1.keyboardFocus = !player.c1.keyboardFocus},
+			onClick(){
+				player.c1.keyboardFocus = !player.c1.keyboardFocus
+			},
 			style(){
 				if (player.c1.keyboardFocus) return {"background-color": "#fc3e3e"}
 			}
@@ -1489,6 +1496,7 @@ addLayer("c1", {
 		if (hasUpgrade("c1", 34)) {g *= 2}
 		if (hasUpgrade("c1", 44)) {g *= 2.5}
 		if (hasUpgrade("c1", 45)) {g *= upgradeEffect("c1", 45).toNumber()}
+		if (hasUpgrade("c1", 61)) {g *= 2}
 		if (hasUpgrade("c1", 65)) {g *= upgradeEffect("c1", 65)}
 		if (hasUpgrade("c1", 74)) {g *= 1.5}
 
@@ -1521,6 +1529,7 @@ addLayer("c2", {
     startData() {return {
         unlocked: true,
         points: ExpantaNum(0),
+		switch: false // false = norm. diffs, true = sub-diffs
 	}},
     color: "#00CE00",
     type: "normal",
@@ -1536,7 +1545,7 @@ addLayer("c2", {
             style: {
 				...cssTemplate1("#00CE00", "#00ff00")
             },
-			unlocked() {return hasUpgrade("c1", 81) || player.c2.points.gt(0)},
+			unlocked() {return (hasUpgrade("c1", 81) || player.c2.points.gt(0)) && !player.c2.switch},
 			
 			canAfford(){return player.c2.points.gte(10)},
 			pay(){}
@@ -1548,7 +1557,7 @@ addLayer("c2", {
             style: {
 				...cssTemplate1("#00ff00", "#59ff59")
             },
-			unlocked() {return hasUpgrade("c2", 11)},
+			unlocked() {return hasUpgrade("c2", 11) && !player.c2.switch},
 			
 			canAfford(){return player.c2.points.gte(30)},
 			pay(){player.c2.points = player.c2.points.sub(30)}
@@ -1560,23 +1569,61 @@ addLayer("c2", {
             style: {
 				...cssTemplate1("#76F447", "#95ff6e")
             },
-			unlocked() {return hasUpgrade("c2", 12)},
+			unlocked() {return hasUpgrade("c2", 12) && !player.c2.switch},
 			
 			canAfford(){return player.c2.points.gte(60)},
 			pay(){player.c2.points = player.c2.points.sub(60)}
         },
 		14: {
 			fullDisplay(){
-				return displayUpgSmall("1p5", "Calm", '+0.0002 base Skill gain.', "Cost: 100 Tower Points", ["c2", 14])
+				return displayUpgSmall("1p5", "Calm", '+0.002 base Skill gain.', "Cost: 100 Tower Points", ["c2", 14])
 			},
             style: {
 				...cssTemplate1("#befb24", "#d3ff62")
             },
-			unlocked() {return hasUpgrade("c2", 13)},
+			unlocked() {return hasUpgrade("c2", 13) && !player.c2.switch},
 			
 			canAfford(){return player.c2.points.gte(100)},
 			pay(){player.c2.points = player.c2.points.sub(100)}
         },
+		/*
+		15: {
+			fullDisplay(){
+				return displayUpgSmall("0p25", "Playground", '-', "Cost: 1e20 Skill", ["c2", 15])
+			},
+            style: {
+				...cssTemplate1("#00e800", "#5ae25a")
+            },
+			unlocked() {return hasUpgrade("c2", 11) && player.c2.switch},
+			
+			canAfford(){return player.points.gte(1e20)},
+			pay(){player.points = player.points.sub(1e20)}
+        },
+		16: {
+			fullDisplay(){
+				return displayUpgSmall("0p75", "Simple", '-', "Cost: 3.162e22 Skill", ["c2", 16])
+			},
+            style: {
+				...cssTemplate1("#4caf50", "#75af77")
+            },
+			unlocked() {return hasUpgrade("c2", 12) && player.c2.switch},
+			
+			canAfford(){return player.points.gte(3.162e22)},
+			pay(){player.points = player.points.sub(3.162e22)}
+        },
+		17: {
+			fullDisplay(){
+				return displayUpgSmall("1p25", "Neat", '-', "Cost: 1e25 Skill", ["c2", 17])
+			},
+            style: {
+				...cssTemplate1("#a4bd47", "#b3c27c")
+            },
+			unlocked() {return hasUpgrade("c2", 13) && player.c2.switch},
+			
+			canAfford(){return player.points.gte(1e25)},
+			pay(){player.points = player.points.sub(1e25)}
+        },
+		*/
 		21: {
 			fullDisplay(){
 				return displayUpgSmall("2", "Medium", '+15m Time Hardcap and unlock a new tower... again.', "Cost: 150 Tower Points", ["c2", 21])
@@ -1584,48 +1631,72 @@ addLayer("c2", {
             style: {
 				...cssTemplate1("#FFFF00", "#ffff6c")
             },
-			unlocked() {return hasUpgrade("c2", 14)},
+			unlocked() {return hasUpgrade("c2", 14) && !player.c2.switch},
 			
 			canAfford(){return player.c2.points.gte(150)},
 			pay(){player.c2.points = player.c2.points.minus(150)}
         },
 		22: {
 			fullDisplay(){
-				return displayUpgSmall("2p5", "Intermediate", "TooEasy's boost is slightly improved.", "Cost: 225 Tower Points", ["c2", 22])
+				return displayUpgSmall("2p5", "Intermediate", "TooEasy's boost is slightly improved.", "Cost: 275 Tower Points", ["c2", 22])
 			},
             style: {
 				...cssTemplate1("#ffbb00", "#ffdc52")
             },
-			unlocked() {return hasUpgrade("c2", 21)},
+			unlocked() {return hasUpgrade("c2", 21) && !player.c2.switch},
 			
-			canAfford(){return player.c2.points.gte(225)},
-			pay(){player.c2.points = player.c2.points.minus(225)}
+			canAfford(){return player.c2.points.gte(275)},
+			pay(){player.c2.points = player.c2.points.minus(275)}
         },
 		23: {
 			fullDisplay(){
-				return displayUpgSmall("3", "Hard", 'Unlock Slamo Clicker. Also, each EToH difficulty unlocks a new tower.', "Cost: 350 Tower Points", ["c2", 23])
+				return displayUpgSmall("3", "Hard", 'Unlock Slamo Clicker. Also, each EToH difficulty unlocks a new tower.', "Cost: 450 Tower Points", ["c2", 23])
 			},
             style: {
 				...cssTemplate1("#FE7C00", "#ffa754")
             },
-			unlocked() {return hasUpgrade("c2", 22)},
+			unlocked() {return hasUpgrade("c2", 22) && !player.c2.switch},
 			
-			canAfford(){return player.c2.points.gte(350)},
-			pay(){player.c2.points = player.c2.points.minus(350)}
+			canAfford(){return player.c2.points.gte(450)},
+			pay(){player.c2.points = player.c2.points.minus(450)}
         },
 		24: {
 			fullDisplay(){
-				return displayUpgSmall("3p5", "Tricky", 'x1.5 Tower Point gain. (End of Pre-Release, for now)', "Cost: 500 Tower Points", ["c2", 24])
+				return displayUpgSmall("3p5", "Tricky", 'x1.5 Tower Point gain.', "Cost: 800 Tower Points", ["c2", 24])
 			},
             style: {
 				...cssTemplate1("#ff2c00", "#ff7256")
             },
-			unlocked() {return hasUpgrade("c2", 23)},
+			unlocked() {return hasUpgrade("c2", 23) && !player.c2.switch},
 			
-			canAfford(){return player.c2.points.gte(500)},
-			pay(){player.c2.points = player.c2.points.minus(500)}
+			canAfford(){return player.c2.points.gte(800)},
+			pay(){player.c2.points = player.c2.points.minus(800)}
         },
+		/*31: {
+			fullDisplay(){
+				return displayUpgSmall("4", "Difficult", 'Unlock sub-difficulties in this class. Beware of the inflation...', "Cost: 2,000 Tower Points", ["c2", 31])
+			},
+            style: {
+				...cssTemplate1("#FF3232", "#ff7777")
+            },
+			unlocked() {return hasUpgrade("c2", 24) && !player.c2.switch},
+			
+			canAfford(){return player.c2.points.gte(1250)},
+			pay(){player.c2.points = player.c2.points.minus(1250)}
+        }, later on release*/
     },
+	clickables: {
+		11: {
+			display() {
+				if (player.c2.switch) return "<h3>Switch to Normal Difficulties</h3>"
+				else return "<h3>Switch to Sub-Difficulties</h3>"
+			},
+			unlocked() {return hasUpgrade("c2", 31)},
+
+			canClick() {return true},
+			onClick() { player.c2.switch = !player.c2.switch }
+		}
+	},
 	gainMult() {
 		let g = ExpantaNum(10)
 		if (hasUpgrade("c2", 24)) g = g.mul(1.5)
@@ -1724,9 +1795,7 @@ addLayer("pl", {
 		blocks: [],
 		win_delay: 5,
 		win_mult: 1200,
-		comp: 0,
-
-		disp_size: 20
+		comp: 0
     }},
     color: "#92ff2d",
     type: "none",
@@ -1738,8 +1807,8 @@ addLayer("pl", {
         getCanClick(data, id) {return false},
 		getStyle(data, id) {
 			let ts = {
-				"height": player.pl.disp_size + "px",
-                "width": player.pl.disp_size + "px",
+				"height": player.pl_disp_size + "px",
+                "width": player.pl_disp_size + "px",
                 "margin-left":"-2px",
                 "margin-top":"-5px",
                 'border':"0px",
@@ -1813,18 +1882,50 @@ addLayer("pl", {
 			onClick(){pl_regen()}
 		},
 	},
+	hotkeys: [
+		{
+			key: "ArrowUp",
+			description: "",
+			onPress(){
+				if (!player.pl.jumping) {
+					player.pl.y_vel = 10
+					player.pl.jumping = true
+				}
+			},
+			unlocked() {return hasUpgrade("c1", 41)}
+		},
+		{
+			key: "ArrowLeft",
+			description: "",
+			onPress(){
+				if (!player.pl.blocks.includes(player.pl.coords - 1))
+					player.pl.x -= 1
+			},
+			unlocked() {return hasUpgrade("c1", 41)}
+		},
+		{
+			key: "ArrowRight",
+			description: "",
+			onPress(){
+				if (!player.pl.blocks.includes(player.pl.coords + 1))
+					player.pl.x += 1
+			},
+			unlocked() {return hasUpgrade("c1", 41)}
+		},
+	],
 
 	tabFormat: [
 		"grid",
 		"clickables",
 		["display-text", function(){
 			return `Reach to the top to win. Each completion gives ${format(getPointGen().mul(player.pl.win_mult))} Skill.<br>
+			You can also use arrow keys to move (ArrowUp, ArrowLeft, ArrowRight)<br>
 			You have ${player.pl.comp} platformer completions.
 			`
 		}],
 		"blank",
 		["display-text", "Change display size:"],
-		["slider", ["disp_size", 1, 50]]
+		["p_slider", ["pl_disp_size", 1, 50]]
 	],
 	
     layerShown() {return hasUpgrade("c1", 41)},
@@ -1848,9 +1949,12 @@ addLayer("pl", {
 		else player.pl.touching = false
 		if (player.pl.blocks.includes(player.pl.coords - 100) && player.pl.y_vel >= 0)
 			player.pl.y_vel = 0
-		if (player.pl.blocks.includes(player.pl.coords))
-			player.pl.y += 1
-		
+		if (player.pl.blocks.includes(player.pl.coords)) {
+			if (!player.pl.blocks.includes(player.pl.coords + 100))
+				player.pl.y -= 1
+			else player.pl.y += 1
+		}
+
 		if (player.pl.touching) {
 			if (!player.pl.jumping) {
 				player.pl.y_vel = 0
@@ -2227,6 +2331,8 @@ addLayer("tree-tab", {
 				"prestige-button",
 				"resource-display",
 				"blank",
+				"clickables",
+				"blank",
 				"upgrades-margin",
 			]]
 		}}],
@@ -2257,7 +2363,7 @@ addLayer("tree-tab", {
 		if (hasUpgrade("c1", 64)) {gain = gain.add(0.0105)}
 		if (hasUpgrade("c1", 81)) {gain = gain.add(0.03)}
 
-		if (hasUpgrade("c2", 14)) {gain = gain.add(0.0002)}
+		if (hasUpgrade("c2", 14)) {gain = gain.add(0.002)}
 		
 		player.baseSkillGain = gain
 	}
