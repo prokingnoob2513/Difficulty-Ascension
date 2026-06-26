@@ -250,6 +250,7 @@ function NaNcheck(data) {
 		}
 	}
 }
+
 function exportSave() {
 	let str = btoa(JSON.stringify(player));
 
@@ -261,6 +262,26 @@ function exportSave() {
 	document.execCommand("copy");
 	document.body.removeChild(el);
 }
+function exportFile() {
+	// 1. Create a Blob containing the text data with a plaintext MIME type
+	const blob = new Blob([btoa(JSON.stringify(player))], { type: 'text/plain;charset=utf-8' });
+	
+	// 2. Generate a temporary local URL pointing to the Blob
+	const url = URL.createObjectURL(blob);
+	
+	// 3. Create a temporary hidden anchor element
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = "DAsavefile.txt"; // Sets the default file name for the user
+	link.style.display = 'none';
+	
+	// 4. Append to DOM, trigger click, and clean up immediately
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+	URL.revokeObjectURL(url); // Free up browser memory
+}
+
 function importSave(imported = undefined, forced = false) {
 	if (imported === undefined)
 		imported = prompt("Paste your save here");
@@ -278,6 +299,16 @@ function importSave(imported = undefined, forced = false) {
 		return;
 	}
 }
+function importFile() {
+	const input = document.querySelector('input[type="file"]');
+	if (!input.files?.length) return;
+
+	const file = input.files.item(0);
+	if (!file) return;
+
+	file.text().then(data => importSave(data));
+}
+
 function versionCheck() {
 	let setVersion = true;
 

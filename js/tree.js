@@ -202,7 +202,10 @@ addLayer("cn", {
     position: 0,
     startData() {return {
         unlocked: true,
-        points: ExpantaNum(0) // useless
+        points: ExpantaNum(0),
+
+		other: false, // "The Other Side" toggle
+		n_energy: ExpantaNum(0)
     }},
     color: "#ffffff",
     type: "none",
@@ -252,7 +255,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#000000", "#92248F")
             },
-			unlocked() {return hasUpgrade("cn", 21)},
+			unlocked() {return hasUpgrade("cn", 21) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.0015)},
 			pay(){player.points = player.points.minus(0.0015)}
@@ -264,7 +267,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#000000", "#C000FF")
             },
-			unlocked() {return hasUpgrade("cn", 31)},
+			unlocked() {return hasUpgrade("cn", 31) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.0025)},
 			pay(){player.points = player.points.minus(0.0025)}
@@ -276,7 +279,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#FFFFFF", "#00FF00")
             },
-			unlocked() {return hasUpgrade("cn", 32)},
+			unlocked() {return hasUpgrade("cn", 32) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.005)},
 			pay(){player.points = player.points.minus(0.005)}
@@ -288,7 +291,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#FFFFFF", "#FF0000")
             },
-			unlocked() {return hasUpgrade("cn", 33)},
+			unlocked() {return hasUpgrade("cn", 33) && !player.cn.other},
 			effect(){
 				// ln(skill+10)
 				pow = hasUpgrade("cn", 61) ? 1.25 : 1
@@ -308,7 +311,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#FF0000", "#FFFF00")
             },
-			unlocked() {return hasUpgrade("cn", 34)},
+			unlocked() {return hasUpgrade("cn", 34) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.04)},
 			pay(){player.points = player.points.minus(0.04)}
@@ -320,7 +323,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#ff0000", "#ffffff")
             },
-			unlocked() {return hasUpgrade("cn", 41)},
+			unlocked() {return hasUpgrade("cn", 41) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.12)},
 			pay(){player.points = player.points.minus(0.12)}
@@ -332,7 +335,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#d80000", "#FFFFFF")
             },
-			unlocked() {return hasUpgrade("cn", 42)},
+			unlocked() {return hasUpgrade("cn", 42) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.2)},
 			pay(){player.points = player.points.minus(0.2)}
@@ -344,7 +347,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#00ff00", "#000000")
             },
-			unlocked() {return hasUpgrade("cn", 43)},
+			unlocked() {return hasUpgrade("cn", 43) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(0.5)},
 			pay(){player.points = player.points.minus(0.5)}
@@ -358,7 +361,7 @@ addLayer("cn", {
 				"height": "175px",
 				...cssTemplate1("#ffffff", "#ff2727")
             },
-			unlocked() {return hasUpgrade("cn", 44)},
+			unlocked() {return hasUpgrade("cn", 44) && !player.cn.other},
 			effect(){return ExpantaNum.pow(1.125,
 				player.cn.upgrades.length + player.c0.upgrades.length + player.c1.upgrades.length + player.c2.upgrades.length
 			)},
@@ -373,7 +376,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#ffffff", "#ff4c4c")
             },
-			unlocked() {return hasUpgrade("cn", 51)},
+			unlocked() {return hasUpgrade("cn", 51) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(3)},
 			pay(){player.points = player.points.minus(3)}
@@ -385,7 +388,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#ffffff", "#000000")
             },
-			unlocked() {return hasUpgrade("cn", 61)},
+			unlocked() {return hasUpgrade("cn", 61) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(6)},
 			pay(){player.points = player.points.minus(6)}
@@ -397,7 +400,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#FFAC65", "#000000")
             },
-			unlocked() {return hasUpgrade("cn", 62)},
+			unlocked() {return hasUpgrade("cn", 62) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(14)},
 			pay(){player.points = player.points.mul(4)}
@@ -409,7 +412,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#044300", "#ffffff")
             },
-			unlocked() {return hasUpgrade("cn", 62)},
+			unlocked() {return hasUpgrade("cn", 62) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(50)},
 			pay(){player.points = player.points.sub(50)}
@@ -421,7 +424,7 @@ addLayer("cn", {
             style: {
 				...cssTemplate1("#661096", "#af1dfd")
             },
-			unlocked() {return hasUpgrade("cn", 64)},
+			unlocked() {return hasUpgrade("cn", 64) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(110)},
 			pay(){player.points = player.points.sub(110)}
@@ -435,10 +438,24 @@ addLayer("cn", {
 				"height": "175px",
 				...cssTemplate1("#0000ff", "#ffffff")
             },
-			unlocked() {return hasUpgrade("cn", 65)},
+			unlocked() {return hasUpgrade("cn", 65) && !player.cn.other},
 			
 			canAfford(){return player.points.gte(500)},
 			pay(){player.points = player.points.sub(500)}
+        },
+
+		// TOS upgrades
+		81: {
+			fullDisplay(){
+				return displayUpgSmall("-235", "Antipodial", "geez", "Cost: 1e21 Skill", ["cn", 81])
+			},
+            style: {
+				...cssTemplate1("#4a01a7", "#734ba7")
+            },
+			unlocked() {return player.cn.other},
+			
+			canAfford(){return player.points.gte(2e20)},
+			pay(){player.points = player.points.sub(2e20)}
         },
     },
 	infoboxes: {
@@ -453,7 +470,7 @@ addLayer("cn", {
 				Placeholder quote<br><br>
 				Skill is the main currency, used for ascening difficulties. It is passively generated every second.<br>
 				Formula: [Base gain] * [Multipliers]<br>
-				Base gain: ${player.baseSkillGain}<br><br>
+				Base gain: ${format(player.baseSkillGain)}<br><br>
 
 				DISCLAIMER: This difficulty may be modified due to not having enough gameplay ideas.
 				credits to Eternal Joke Towers btw
@@ -461,6 +478,18 @@ addLayer("cn", {
 			},
 			unlocked(){return hasUpgrade("cn", 11)}
 		},
+	},
+	clickables: {
+		11: {
+			display() {
+				if (player.cn.other) return "<h3>Go to The Main Side</h3>"
+				else return "<h3>Go to The Other Side</h3>"
+			},
+			unlocked() {return hasUpgrade("c2", 15)},
+
+			canClick() {return true},
+			onClick() { player.cn.other = !player.cn.other }
+		}
 	},
 	
     layerShown() {return true},
@@ -1586,10 +1615,10 @@ addLayer("c2", {
 			canAfford(){return player.c2.points.gte(100)},
 			pay(){player.c2.points = player.c2.points.sub(100)}
         },
-		/*
+		
 		15: {
 			fullDisplay(){
-				return displayUpgSmall("0p25", "Playground", '-', "Cost: 1e20 Skill", ["c2", 15])
+				return displayUpgSmall("0p25", "Playground", "Unlock The Other Side in Class Negative.", "Cost: 1e20 Skill", ["c2", 15])
 			},
             style: {
 				...cssTemplate1("#00e800", "#5ae25a")
@@ -1601,29 +1630,29 @@ addLayer("c2", {
         },
 		16: {
 			fullDisplay(){
-				return displayUpgSmall("0p75", "Simple", '-', "Cost: 3.162e22 Skill", ["c2", 16])
+				return displayUpgSmall("0p75", "Simple", '-', "Cost: 1e25 Skill", ["c2", 16])
 			},
             style: {
 				...cssTemplate1("#4caf50", "#75af77")
             },
 			unlocked() {return hasUpgrade("c2", 12) && player.c2.switch},
 			
-			canAfford(){return player.points.gte(3.162e22)},
-			pay(){player.points = player.points.sub(3.162e22)}
+			canAfford(){return player.points.gte(1e25)},
+			pay(){player.points = player.points.sub(1e25)}
         },
 		17: {
 			fullDisplay(){
-				return displayUpgSmall("1p25", "Neat", '-', "Cost: 1e25 Skill", ["c2", 17])
+				return displayUpgSmall("1p25", "Neat", '-', "Cost: 1e30 Skill", ["c2", 17])
 			},
             style: {
 				...cssTemplate1("#a4bd47", "#b3c27c")
             },
 			unlocked() {return hasUpgrade("c2", 13) && player.c2.switch},
 			
-			canAfford(){return player.points.gte(1e25)},
-			pay(){player.points = player.points.sub(1e25)}
+			canAfford(){return player.points.gte(1e30)},
+			pay(){player.points = player.points.sub(1e30)}
         },
-		*/
+		
 		21: {
 			fullDisplay(){
 				return displayUpgSmall("2", "Medium", '+15m Time Hardcap and unlock a new tower... again.', "Cost: 150 Tower Points", ["c2", 21])
@@ -1672,7 +1701,7 @@ addLayer("c2", {
 			canAfford(){return player.c2.points.gte(800)},
 			pay(){player.c2.points = player.c2.points.minus(800)}
         },
-		/*31: {
+		31: {
 			fullDisplay(){
 				return displayUpgSmall("4", "Difficult", 'Unlock sub-difficulties in this class. Beware of the inflation...', "Cost: 2,000 Tower Points", ["c2", 31])
 			},
@@ -1683,7 +1712,7 @@ addLayer("c2", {
 			
 			canAfford(){return player.c2.points.gte(1250)},
 			pay(){player.c2.points = player.c2.points.minus(1250)}
-        }, later on release*/
+        },
     },
 	clickables: {
 		11: {
@@ -1944,13 +1973,15 @@ addLayer("pl", {
 		}
 
 		// collision (up and down)
-		if (player.pl.blocks.includes(player.pl.coords + 100))
+		if (player.pl.blocks.includes(player.pl.coords + 100)) {
 			player.pl.touching = true
-		else player.pl.touching = false
-		if (player.pl.blocks.includes(player.pl.coords - 100) && player.pl.y_vel >= 0)
+			if (player.pl.y_vel <= -5) player.pl.y_vel = 0
+		} else player.pl.touching = false
+
+		if (player.pl.blocks.includes(player.pl.coords - 100) && player.pl.y_vel > 0)
 			player.pl.y_vel = 0
 		if (player.pl.blocks.includes(player.pl.coords)) {
-			if (!player.pl.blocks.includes(player.pl.coords + 100))
+			if (player.pl.blocks.includes(player.pl.coords + 100) || player.pl.blocks.includes(player.pl.coords - 100))
 				player.pl.y -= 1
 			else player.pl.y += 1
 		}
@@ -2173,9 +2204,9 @@ addLayer("sl", {
 	tabFormat: [
 		["main-display", 2],
 		["display-text", function(){
-			let a = player.sl.points.mul(5).pow(0.08).max(1) // skill
-			let b = player.sl.points.mul(3.5).pow(0.05).max(1) // time
-			let c = player.sl.points.mul(2).pow(0.02).max(1) // input
+			let a = player.sl.points.mul(8).pow(0.085).max(1) // skill
+			let b = player.sl.points.mul(6).pow(0.055).max(1) // time
+			let c = player.sl.points.mul(4).pow(0.025).max(1) // input
 			return `
 			...which gives x${format(a)} Skill gain<br>
 			x${format(b)} Time gain<br>
@@ -2187,9 +2218,9 @@ addLayer("sl", {
 	],
 
 	effect() {
-		let a = player.sl.points.mul(5).pow(0.08).max(1) // skill
-		let b = player.sl.points.mul(3.5).pow(0.05).max(1) // time
-		let c = player.sl.points.mul(2).pow(0.02).max(1) // input
+		let a = player.sl.points.mul(8).pow(0.085).max(1) // skill
+		let b = player.sl.points.mul(6).pow(0.055).max(1) // time
+		let c = player.sl.points.mul(4).pow(0.025).max(1) // input
 		return [a,b,c]
 	},
     layerShown() {return hasUpgrade("c2", 23)},
@@ -2288,6 +2319,7 @@ addLayer("tree-tab", {
 			["infobox", "lore"],
 			["infobox", "info"],
 			"blank",
+			"clickables",
 			"upgrades-margin"
 		]]],
 
@@ -2350,8 +2382,8 @@ addLayer("tree-tab", {
     previousTab: "",
     leftTab: true,
 
-	// update base skill gain
 	update(){
+		// update base skill gain
 		let gain = ExpantaNum(0)
 		if (hasUpgrade("cn", 11)) {gain = gain.add(0.0001)}
 		if (hasUpgrade("cn", 42)) {gain = gain.add(0.0001)}
@@ -2364,7 +2396,12 @@ addLayer("tree-tab", {
 		if (hasUpgrade("c1", 81)) {gain = gain.add(0.03)}
 
 		if (hasUpgrade("c2", 14)) {gain = gain.add(0.002)}
-		
 		player.baseSkillGain = gain
+		
+		//if (hasUpgrade("c2", 71)) player.maxClass = 3
+		if (hasUpgrade("c1", 81)) player.maxClass = 2
+		else if (hasUpgrade("c0", 71)) player.maxClass = 1
+		else if (hasUpgrade("cn", 71)) player.maxClass = 0
+		else player.maxClass = -1
 	}
 })

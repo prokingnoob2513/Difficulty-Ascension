@@ -14,6 +14,66 @@ const TMT_VERSION = {
 	tmtName: "Dreams Really Do Come True"
 }
 
+// const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+let bg_1 = new Audio("audio/c-1.mp3");
+bg_1.loop = true;
+let bg = [new Audio("audio/c0.mp3"), new Audio("audio/c1.mp3"), new Audio("audio/c2.mp3"), new Audio("audio/c3.mp3"), ]
+for (i = 0; i <= 3; i++) {bg[i].loop = true}
+
+// code from https://github.com/cfabi576/Cfabis-Tree/blob/593f62ac83565b0f9a7f6f312596ddcef31f0f8a/js/game.js#L13
+function playMusic(switc) {
+	if (switc) {
+		if (player.music != player.maxClass) player.music += 1
+		else player.music = -3
+	}
+    let enabled = player.music > -3
+
+    if (!enabled) {
+        bg_1.pause();
+		for (i = 0; i <= 3; i++) {
+        	bg[i].pause();
+		}
+        return
+    }
+
+	if (player.music > -1) {
+			bg_1.pause();
+			for (i = 0; i <= 3; i++) {
+				if (i == player.music) {
+					bg[i].play().catch(() => {document.addEventListener("click", () => bg[i].play(), { once: true });});
+				} else bg[i].pause();
+			}
+	} else if (player.music == -1) {
+		bg_1.play().catch(() => {document.addEventListener("click", () => bg_1.play(), { once: true });});
+		for (i = 0; i <= 3; i++) {
+        	bg[i].pause();
+		}
+	}
+
+	if (player.music == -2) {
+		// copy-pasting is ❌
+		if (player.maxClass > -1) {
+			bg_1.pause();
+			for (i = 0; i <= 3; i++) {
+				if (i == player.maxClass) {
+					bg[i].play().catch(() => {document.addEventListener("click", () => bg[i].play(), { once: true });});
+				} else bg[i].pause();
+			}
+		} else if (player.maxClass == -1) {
+			bg_1.play().catch(() => {document.addEventListener("click", () => bg_1.play(), { once: true });});
+			for (i = 0; i <= 3; i++) {
+				bg[i].pause();
+			}
+		}
+	}
+}
+
+// Lo refrescamos cada segundo por seguridad
+setInterval(() => {
+    playMusic()
+	changeTheme()
+}, 250);
+
 function getResetGain(layer, useType = null) {
 	let type = useType
 	if (!useType){ 

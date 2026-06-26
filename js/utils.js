@@ -85,7 +85,9 @@ function buyUpg(layer, id) {
 	player[layer].upgrades.push(id);
 	if (upg.onPurchase != undefined)
 		run(upg.onPurchase, upg)
-	//console.log("geez")
+
+	let s = new Audio("audio/upg.mp3")
+	s.play()
 }
 
 function buyMaxBuyable(layer, id) {
