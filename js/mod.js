@@ -103,8 +103,6 @@ function getPointGen() {
 function addedPlayerData() {return {
 	baseSkillGain: ExpantaNum(0),
 	pl_disp_size: 20,
-	music: -2, // -3: off, -2: auto, -1+: class
-	maxClass: -1,
 
 	// options stuff
 	opt_preview_ordinals: false,
@@ -121,6 +119,9 @@ var displayThings = [
 function isEndgame() {
 	return false
 }
+
+// Music yeah
+
 
 // Less important things beyond this point!
 

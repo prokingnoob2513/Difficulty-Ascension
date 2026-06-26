@@ -3,17 +3,16 @@ const themes = {
 	1: "aqua"
 };
 const theme_names = {
-	aqua: "Default"
+	aqua: "Aqua"
 };
-function tg() {
-	if (player.maxClass == 2) return "#002700"
-	if (player.maxClass == 1) return "#262b10"
-	if (player.maxClass == 0) return "#172524"
-	if (player.maxClass == -1) return "#000000"
-}
 function changeTheme() {
-	document.body.style.setProperty('--background', tg());
-	document.body.style.setProperty('--background_tooltip', tg());
+	let aqua = player.theme == "aqua";
+	colors_theme = colors[player.theme || "default"];
+	document.body.style.setProperty('--background', aqua ? "#001f3f" : "#0f0f0f");
+	document.body.style.setProperty('--background_tooltip', aqua ? "rgba(0, 15, 31, 0.75)" : "rgba(0, 0, 0, 0.75)");
+	document.body.style.setProperty('--color', aqua ? "#bfdfff" : "#dfdfdf");
+	document.body.style.setProperty('--points', aqua ? "#dfefff" : "#ffffff");
+	document.body.style.setProperty("--locked", aqua ? "#c4a7b3" : "#bf8f8f");
 }
 function getThemeName() {
 	return player.theme ? theme_names[player.theme] : "Default";
