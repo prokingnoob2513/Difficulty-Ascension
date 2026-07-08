@@ -42,10 +42,7 @@ let changelog = `
 	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-	[prokingnoob2513]: Former Proking's Upgrade Tree developer here. Roblox made it so that I can't even develop games on roblox anymore... you know,
-	that incremental game is designed to reach ExpantaNum limit. It started with only me working on PrUT, but as the community grew, it expanded into
-	a medium-sized dev team. Roblox updates are slowly getting worse, to the point where you need to complete evaluation process to make games public.
-	I can't just keep up with this anymore. I had to discontinue PrUT from now on. (more soon)<br>
+	[Lost media due to being transfered to ███████]
 `
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
